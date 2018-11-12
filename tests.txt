@@ -1,0 +1,24 @@
+states:A, B, C, D
+alphabet: 0,1,$
+initial:A
+accepting:D
+transitions:A,0,A|A,1,B|B,0,C|B,1,B|B,$,A|C,1,D|C,$,B|D,0,C|D,$,B
+
+
+states:A, B, C, D, E, F, G
+alphabet: 0,1
+initial:A
+accepting:F
+transitions:A,0,B|A,1,C|B,0,D|B,1,E|C,0,F|C,1,G|D,0,D|D,1,E|E,0,F|E,1,G|F,0,D|F,1,E|G,0,F|G,1,G
+ 
+states:1, 2, 3, 4, 5, 6, 7
+alphabet: a,b
+initial:1
+accepting:6,7
+transitions:1,a,4|1,b,6|2,a,1|2,b,7|3,a,2|3,b,4|4,a,6|4,b,5|5,a,7|5,b,5|6,a,3|6,b,6|7,a,3|7,b,7
+
+states:1, 2, 3, 4, 5, 6, 7, 8, 9
+alphabet: a,b
+initial:1
+accepting:5, 6, 9
+transitions:1,a,2|1,b,3|2,a,4|2,b,9|3,a,5|3,b,4|4,a,6|4,b,4|5,a,5|5,b,7|6,a,9|6,b,7|7,a,8|7,b,5|8,a,7|8,b,6|9,a,9|9,b,8
