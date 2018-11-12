@@ -55,6 +55,26 @@ function textToTransition(text) {
 	return transitionObj;
 }
 
+function execute() {
+	automaton =inputToAutomaton();
+	console.log("Automaton");
+	console.log(automaton);
+
+	automaton['nfaeTable'] = buildInitialStucture2();
+	console.log(automaton);
+	nfae2nfa(automaton);
+	nfa2dfa(automaton);
+	var formattedDFA = tableToGraphAutomata(automaton.dfaTable);
+	addInitialClasses(automaton.dfaTable);
+	minStruct = automaton.dfaTable;
+	minimize();
+
+	drawGraph();
+	drawGraphNFA();
+	drawGraphDFA(formattedDFA);
+	drawMinGraph();
+}
+
 function minimize() {
 	reClass(automaton);
 	var newCount = reName(automaton);
@@ -66,33 +86,52 @@ function minimize() {
 }
 
 function drawGraph() {
-	automaton =inputToAutomaton();
-	console.log("Automaton");
-	console.log(automaton);
 
-	automaton['nfa_table'] = buildInitialStucture2();
-	console.log(automaton);
-	nfa2dfa(automaton);
-	addInitialClasses(automaton.dfaTable);
-	minStruct = automaton.dfaTable;
-	minimize();
-	
-  var dotString = noam.fsm.printDotFormat(automaton);
+console.log("formattedOriginalAutomaton");
+ 	var formattedAutomaton = tableToGraphAutomata(automaton.nfaeTable);
+ 	console.log(formattedAutomaton);
+  var dotString = noam.fsm.printDotFormat(formattedAutomaton);
 
   var gvizXml = Viz(dotString, "svg");
   $("#automatonGraph").html(gvizXml);
   $("#automatonGraph svg").width($("#automatonGraph").width());
 
-  drawMinGraph();
+}
+
+function drawGraphNFA() {
+
+ 	var formattedAutomaton = tableToGraphAutomata(automaton.nfaTable);
+console.log("formattedNFAAutomaton");
+ 	console.log(formattedAutomaton);
+  var dotString2 = noam.fsm.printDotFormat(formattedAutomaton);
+
+  var gvizXml2 = Viz(dotString2, "svg");
+  $("#automatonNFAGraph").html(gvizXml2);
+  $("#automatonNFAGraph svg").width($("#automatonNFAGraph").width());
+
+}
+
+function drawGraphDFA(dfa) {
+
+ 	var formattedAutomaton = dfa;
+console.log("formattedDFAAutomaton");
+ 	console.log(formattedAutomaton);
+  var dotString4 = noam.fsm.printDotFormat(formattedAutomaton);
+
+  var gvizXml4 = Viz(dotString4, "svg");
+  $("#automatonDFAGraph").html(gvizXml4);
+  $("#automatonDFAGraph svg").width($("#automatonDFAGraph").width());
+
 }
 
 function drawMinGraph() {
+
 	console.log("minimizedAutomaton");
 	console.log(minimizedAutomaton);
-  var dotString2 = noam.fsm.printDotFormat(minimizedAutomaton);
+  var dotString3 = noam.fsm.printDotFormat(minimizedAutomaton);
 
-  var gvizXml2 = Viz(dotString2, "svg");
-  $("#minimizedAutomatonGraph").html(gvizXml2);
+  var gvizXml3 = Viz(dotString3, "svg");
+  $("#minimizedAutomatonGraph").html(gvizXml3);
   $("#minimizedAutomatonGraph svg").width($("#minimizedAutomatonGraph").width());
 }
 
@@ -219,4 +258,45 @@ function buildMinimizedAutomaton(struct) {
 	minimizedAutomatonObject["acceptingStates"] = acceptedArray;
 	console.log(minimizedAutomatonObject);
 	minimizedAutomaton = minimizedAutomatonObject;
+}
+
+function tableToGraphAutomata(table) {
+	var automatonObject = {
+		
+	};
+
+	var stateArray = [];
+	Object.keys(table).forEach((state) => {
+		if (!stateArray.includes(table[state].class)) {
+			stateArray.push(table[state].class);
+		}
+	});
+	automatonObject["states"] = automaton.states;
+
+	var transitionArray = [];
+	var classesAdded = [];
+	var acceptedArray = [];
+	var initialArray = [];
+	Object.keys(table).forEach((state) => {
+		
+			Object.keys(table[state].trans).forEach((symbol) => {
+					
+						var nextState = table[state].trans[symbol];
+						
+						transitionArray.push({fromState: state, toStates:[nextState], symbol});					
+				})
+
+				if (table[state].accepting)
+					acceptedArray.push(state);
+
+				if (table[state].initial) {
+					initialArray.push(state);
+				}
+	})
+	automatonObject["transitions"] = transitionArray;
+	automatonObject["alphabet"] = automaton["alphabet"];
+	automatonObject["initialState"] = initialArray;
+	automatonObject["acceptingStates"] = acceptedArray;
+	console.log(automatonObject);
+	return automatonObject;
 }

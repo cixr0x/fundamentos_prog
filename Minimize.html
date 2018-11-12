@@ -9,6 +9,7 @@
     <script src="./minimize_files/noam.js"></script>
     <script src="./minimize_files/minimize.js"></script>
     <script src="./minimize_files/nfa2dfa.js"></script>
+    <script src="./minimize_files/nfae2nfa.js"></script>
 </head>
     <body>
   <div ><textarea id="input" style="height:200px; width:800px">
@@ -18,18 +19,41 @@ initial:A
 accepting:F
 transitions:A,0,B|A,1,C|B,0,D|B,1,E|C,0,F|C,1,G|D,0,D|D,1,E|E,0,F|E,1,G|F,0,D|F,1,E|G,0,F|G,1,G
   </textarea> 
-<button onclick="drawGraph(testAuto);">Minimize</button>
+<button onclick="execute(testAuto);">Minimize</button>
 
       <div class="container graph">
         <h3> Original Automata </h3>
 
         <div id="automatonGraph"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?-->
           <svg width="296pt" height="55pt" viewBox="0.00 0.00 295.75 55.24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width: 724px;">
-</svg>
+        </svg>
 
 
-</div>
+        </div>
       </div>
+
+      <div class="container graph">
+        <h3> NFA (no epsilon) </h3>
+
+        <div id="automatonNFAGraph"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?-->
+          <svg width="296pt" height="55pt" viewBox="0.00 0.00 295.75 55.24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width: 724px;">
+        </svg>
+
+
+        </div>
+      </div>
+
+      <div class="container graph">
+        <h3> DFA </h3>
+
+        <div id="automatonDFAGraph"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?-->
+          <svg width="296pt" height="55pt" viewBox="0.00 0.00 295.75 55.24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width: 724px;">
+        </svg>
+
+
+        </div>
+      </div>
+
 
       <div class="container graph">
         <h3> Minimized Automata </h3>

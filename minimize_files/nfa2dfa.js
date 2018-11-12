@@ -11,8 +11,12 @@ function nfa2dfa(nfa){
 		nfa.dfaTable[state].trans = {};
 		nfa.alphabet.forEach((symbol) => {
 			console.log(nfa);
-			var mergedState =  buildMergedState(nfa.nfa_table, state, symbol);
+			var mergedState =  buildMergedState(nfa.nfaTable, state, symbol);
+			console.log("Merged State");
+
+			console.log(mergedState);
 			nfa.dfaTable[state].trans[symbol] =mergedState;
+
 			if (!Object.keys(nfa.dfaTable).includes(mergedState)){
 				newStates.add(mergedState);
 			}
@@ -32,6 +36,7 @@ function nfa2dfa(nfa){
 }
 
 function buildMergedState(nfa, stateArray, symbol) {
+	console.log("Merged state "+stateArray+" with symbol "+symbol);
 	if (stateArray === "Z")
 		return "Z";
 	var totalStates = new Set([]);
