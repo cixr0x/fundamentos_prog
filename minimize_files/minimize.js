@@ -70,7 +70,11 @@ function drawGraph() {
 	console.log("Automaton");
 	console.log(automaton);
 
-	buildInitialStucture();
+	automaton['nfa_table'] = buildInitialStucture2();
+	console.log(automaton);
+	nfa2dfa(automaton);
+	addInitialClasses(automaton.dfaTable);
+	minStruct = automaton.dfaTable;
 	minimize();
 	
   var dotString = noam.fsm.printDotFormat(automaton);
@@ -92,27 +96,34 @@ function drawMinGraph() {
   $("#minimizedAutomatonGraph svg").width($("#minimizedAutomatonGraph").width());
 }
 
-function buildInitialStucture() {
+function addInitialClasses(dfa) {
+	Object.keys(dfa).forEach((state) => {
+		dfa[state].class = (!dfa[state].accepting)?"A":"B";
+	});
+}
+
+
+function buildInitialStucture2() {
 	var struct = {};
 	automaton.states.forEach((state) => {
 		var stateTransitions = {};
-		automaton.alphabet.forEach((symbol) => {
-			stateTransitions[symbol] = getNextState(automaton, state, symbol);
-		})
 		var accepting = automaton.acceptingStates.includes(state);
 		var initial = state === automaton.initialState[0];
 		struct[state] = {
-			class: (!accepting)?"A":"B",
 			trans: stateTransitions,
 			accepting,
 			initial
 		}
 	});
+	automaton.transitions.forEach((transition) => {
+		if (!struct[transition.fromState].trans[transition.symbol])
+			struct[transition.fromState].trans[transition.symbol] = [];
+		struct[transition.fromState].trans[transition.symbol].push(transition.toStates[0]);
+	})
 	console.log("struct");
 	console.log(struct);
-	minStruct = struct;
+	return struct;
 }
-
 function getNextState(automaton, currentState, symbol) {
 	var transition = automaton.transitions.find((transition) => {
 		//console.log("finding <"+currentState+"> <"+symbol+"> in "+JSON.stringify(transition));
@@ -123,7 +134,10 @@ function getNextState(automaton, currentState, symbol) {
 	})
 	//console.log("transition")
 	//console.log(transition)
-	return transition.toStates[0];
+	if (transition)
+		return transition.toStates[0];
+	else
+		return null;
 }
 
 //Gets the new class for each state, based on the clases of its transitions
