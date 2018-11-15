@@ -27,7 +27,7 @@ function nfa2dfa(nfa){
 				nfa.dfaTable[state].accepting = nfa.acceptingStates.includes(s);
 			})
 			if (state ==='Z')
-				nfa.dfaTable[state].accepting = true;
+				nfa.dfaTable[state].accepting = false;
 		});
 		newStates.delete(state);
 	}

@@ -20,6 +20,7 @@ function nfae2nfa(nfae) {
 				return;
 			}	
 			var stateSet = getCompleteTransitions(nfae, state, symbol);
+			if (stateSet.size === 0) return;
 			nfae.nfaTable[state].trans[symbol] = [...stateSet];
 
 		})

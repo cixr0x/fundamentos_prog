@@ -59,19 +59,20 @@ function execute() {
 	automaton =inputToAutomaton();
 	console.log("Automaton");
 	console.log(automaton);
-
+	
 	automaton['nfaeTable'] = buildInitialStucture2();
+	drawGraph();
 	console.log(automaton);
 	nfae2nfa(automaton);
+	drawGraphNFA();
 	nfa2dfa(automaton);
 	var formattedDFA = tableToGraphAutomata(automaton.dfaTable);
+	drawGraphDFA(formattedDFA);
+	
 	addInitialClasses(automaton.dfaTable);
 	minStruct = automaton.dfaTable;
 	minimize();
-
-	drawGraph();
-	drawGraphNFA();
-	drawGraphDFA(formattedDFA);
+	
 	drawMinGraph();
 }
 
