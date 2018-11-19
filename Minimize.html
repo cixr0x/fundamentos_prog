@@ -4,25 +4,56 @@
     
   <script src="./minimize_files/jquery.min.js"></script>
     <script src="./minimize_files/lodash.min.js"></script>
-    <script src="./minimize_files/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="./minimize_files/viz.js"></script>
     <script src="./minimize_files/noam.js"></script>
     <script src="./minimize_files/minimize.js"></script>
     <script src="./minimize_files/nfa2dfa.js"></script>
     <script src="./minimize_files/nfae2nfa.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+    <style type="text/css">
+textarea {
+ 
+ font-size: 20px;
+}
+</style>
 </head>
-    <body>
-  <div ><textarea id="input" style="height:200px; width:800px">
+    <body style="padding:20px;">
+  <div class="row ">
+    <div class="col-sm-8 align-self-end">
+      <h2> Automata description</h2>
+  </div>
+    <div class="col-sm-4 align-self-end">
+      <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
+        Tests
+    </button>
+  </div>
+  
+  
+</div>
+  <div class="row ">
+    <div class="col-sm-8 align-self-end">
+    <textarea id="input" style="height:200px; width:100%" style="font-size:24px">
 states:A, B, C, D, E, F, G
 alphabet: 0,1
 initial:A
 accepting:F
 transitions:A,0,B|A,1,C|B,0,D|B,1,E|C,0,F|C,1,G|D,0,D|D,1,E|E,0,F|E,1,G|F,0,D|F,1,E|G,0,F|G,1,G
   </textarea> 
-<button onclick="execute(testAuto);">Minimize</button>
+  </div>
+  
+    <div class="col-sm-4 align-self-end">
+      <button  type="button" class="btn btn-primary" onclick="execute(testAuto);">Minimize</button>
+  </div>
+</div>
 
-      <div class="container graph">
-        <h3> Original Automata </h3>
+<br/>
+<br/>
+      <div class=" graph">
+        <h5> Original Automata </h5>
 
         <div id="automatonGraph"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?-->
           <svg width="296pt" height="55pt" viewBox="0.00 0.00 295.75 55.24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width: 724px;">
@@ -32,8 +63,8 @@ transitions:A,0,B|A,1,C|B,0,D|B,1,E|C,0,F|C,1,G|D,0,D|D,1,E|E,0,F|E,1,G|F,0,D|F,
         </div>
       </div>
 
-      <div class="container graph">
-        <h3> NFA (no epsilon) </h3>
+      <div class=" graph">
+        <h5> NFA (no epsilon) </h5>
 
         <div id="automatonNFAGraph"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?-->
           <svg width="296pt" height="55pt" viewBox="0.00 0.00 295.75 55.24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width: 724px;">
@@ -43,8 +74,8 @@ transitions:A,0,B|A,1,C|B,0,D|B,1,E|C,0,F|C,1,G|D,0,D|D,1,E|E,0,F|E,1,G|F,0,D|F,
         </div>
       </div>
 
-      <div class="container graph">
-        <h3> DFA </h3>
+      <div class=" graph">
+        <h5> DFA </h5>
 
         <div id="automatonDFAGraph"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?-->
           <svg width="296pt" height="55pt" viewBox="0.00 0.00 295.75 55.24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width: 724px;">
@@ -55,8 +86,8 @@ transitions:A,0,B|A,1,C|B,0,D|B,1,E|C,0,F|C,1,G|D,0,D|D,1,E|E,0,F|E,1,G|F,0,D|F,
       </div>
 
 
-      <div class="container graph">
-        <h3> Minimized Automata </h3>
+      <div class=" graph">
+        <h5> Minimized Automata </h5>
 
         <div id="minimizedAutomatonGraph"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?-->
           <svg width="296pt" height="55pt" viewBox="0.00 0.00 295.75 55.24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width: 724px;">
@@ -66,6 +97,75 @@ transitions:A,0,B|A,1,C|B,0,D|B,1,E|C,0,F|C,1,G|D,0,D|D,1,E|E,0,F|E,1,G|F,0,D|F,
 </div>
       </div>
 
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="max-width:1020px" role="document">
+    <div class="modal-content" style="width:1020px">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Tests</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body">
+          <h5>Tarea 4, Ejercicio 6.a</h5>
+          <p>states:A, B, C, D, E, F, G<br/>
+alphabet: 0,1<br/>
+initial:A<br/>
+accepting:F<br/>
+transitions:A,0,B|A,1,C|B,0,D|B,1,E|C,0,F|C,1,G|D,0,D|D,1,E|E,0,F|E,1,G|F,0,D|F,1,E|G,0,F|G,1,G<br/>
+</p>
+          <hr>
+          <h5>Tarea 4, Ejercicio 6.b</h5>
+          <p>states:1, 2, 3, 4, 5, 6, 7<br/>
+alphabet: a,b<br/>
+initial:1<br/>
+accepting:6,7<br/>
+transitions:1,a,4|1,b,6|2,a,1|2,b,7|3,a,2|3,b,4|4,a,6|4,b,5|5,a,7|5,b,5|6,a,3|6,b,6|7,a,3|7,b,7<br/>
+</p>
+          <hr>
+          <h5>Tarea 4, Ejercicio 6.c</h5>
+          <p>states:1, 2, 3, 4, 5, 6, 7, 8, 9<br/>
+alphabet: a,b<br/>
+initial:1<br/>
+accepting:5, 6, 9<br/>
+transitions:1,a,2|1,b,3|2,a,4|2,b,9|3,a,5|3,b,4|4,a,6|4,b,4|5,a,5|5,b,7|6,a,9|6,b,7|7,a,8|7,b,5|8,a,7|8,b,6|9,a,9|9,b,8<br/>
+</p>
+          <hr>
+          <h5>Test epsilon</h5>
+          <p>states:A, B, C, D<br/>
+alphabet: 0,1,$<br/>
+initial:A<br/>
+accepting:D<br/>
+transitions:A,0,A|A,1,B|B,0,C|B,1,B|B,$,A|C,1,D|C,$,B|D,0,C|D,$,B<br/>
+</p>
+          <hr>
+        </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Error!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Hubo un error al leer la descripci&oacute;n del aut&oacute;mata. Por favor aseg&uacute;rese de que no hay errores de sintaxis en la descripci&oacute;n del aut&oacute;mata.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
   
 
 </body></html>

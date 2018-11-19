@@ -56,6 +56,7 @@ function textToTransition(text) {
 }
 
 function execute() {
+	try {
 	automaton =inputToAutomaton();
 	console.log("Automaton");
 	console.log(automaton);
@@ -74,6 +75,10 @@ function execute() {
 	minimize();
 	
 	drawMinGraph();
+	} catch (error) {
+		console.log("ERROR!"+error);
+		$('#errorModal').modal();
+	}
 }
 
 function minimize() {
@@ -182,6 +187,8 @@ function getNextState(automaton, currentState, symbol) {
 
 //Gets the new class for each state, based on the clases of its transitions
 function reClass(automaton) {
+	console.log("Before re class");
+	console.log(JSON.stringify(minStruct));
 	Object.keys(minStruct).forEach((state) => {
 		minStruct[state].newClass = minStruct[state].class;
 		Object.keys(minStruct[state].trans).forEach((symbol) => {
@@ -189,6 +196,8 @@ function reClass(automaton) {
 			minStruct[state].newClass+=minStruct[nextState].class;
 		})
 	})
+	console.log("After re class");
+	console.log(JSON.stringify(minStruct));
 }
 
 //renames the new assigned classes to simpler ones (i.e. AAA -> A, AAB -> B, BAA -> C)
@@ -203,6 +212,8 @@ function reName() {
 			counter++
 		}
 	});
+	
+	
 	console.log(shortClasses);
 	
 
@@ -211,7 +222,7 @@ function reName() {
 		minStruct[state].class=shortClass;
 		minStruct[state].newClass=null;
 	});
-	console.log(minStruct);
+	
 
 	console.log("new class count =" +(counter-65));
 	return (counter-65);
