@@ -5,7 +5,7 @@ function nfae2nfa(nfae) {
 	console.log("NFAE to NFA");
 	
 	//getCompleteTransitions(nfae, 'A', '0');
-	getCompleteTransitions(nfae, 'B', '0');
+	// getCompleteTransitions(nfae, 'B', '0');
 	//getCompleteTransitions(nfae, 'B', '1');
 	nfae.nfaTable = {}
 	Object.keys(nfae.nfaeTable).forEach((state) => {

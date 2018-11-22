@@ -48,6 +48,10 @@ function transitionTextArrayToTransitionArray(textArray) {
 
 function textToTransition(text) {
 	var inputArray = text.split(",");
+	if(3 < inputArray.length)
+	{
+		throw new Error("Invalid input in transition:" + text);
+	}
 	var transitionObj = {};
 	transitionObj["fromState"] = inputArray[0];
 	transitionObj["toStates"]= [inputArray[2]] ;
@@ -78,6 +82,7 @@ function execute() {
 	} catch (error) {
 		console.log("ERROR!"+error);
 		$('#errorModal').modal();
+		deleteGraphs();
 	}
 }
 
@@ -102,6 +107,15 @@ console.log("formattedOriginalAutomaton");
   $("#automatonGraph").html(gvizXml);
   $("#automatonGraph svg").width($("#automatonGraph").width());
 
+}
+
+function deleteGraphs() {
+
+console.log("Deleting the Graph");
+	document.getElementById("automatonGraph").innerHTML = "";
+	document.getElementById("automatonNFAGraph").innerHTML = "";
+	document.getElementById("automatonDFAGraph").innerHTML = "";
+	document.getElementById("minimizedAutomatonGraph").innerHTML = "";
 }
 
 function drawGraphNFA() {
