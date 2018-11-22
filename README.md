@@ -4,5 +4,7 @@ Programa que recibe un autómata finito (determinista o no determinista, con o s
 
 
 Roberto Rojas Molina
+
 Ricardo Arturo Benítez Cruz
+
 Luis Antonio Reynoso Salcedo
