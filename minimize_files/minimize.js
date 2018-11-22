@@ -61,6 +61,7 @@ function textToTransition(text) {
 
 function execute() {
 	try {
+	deleteGraphs();
 	automaton =inputToAutomaton();
 	console.log("Automaton");
 	console.log(automaton);
@@ -116,6 +117,8 @@ console.log("Deleting the Graph");
 	document.getElementById("automatonNFAGraph").innerHTML = "";
 	document.getElementById("automatonDFAGraph").innerHTML = "";
 	document.getElementById("minimizedAutomatonGraph").innerHTML = "";
+
+	classCount = 2;
 }
 
 function drawGraphNFA() {
