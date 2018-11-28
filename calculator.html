@@ -21,6 +21,9 @@
         diffPricePct = ko.observable(0);
         diffAmtPct = ko.observable(0);
         stepAmt = ko.observable(0);
+        feesPaid =ko.observable(0);
+
+        bittrexFee = 1.0025;
         initTotal = ko.computed(() => {
           return this.initBtc()*1 + this.initAmt()*this.initPrice();
         });
@@ -33,45 +36,67 @@
         });
 
         diffTotal =  ko.computed(() => {
+          return round(this.total() -  this.initTotal(), 8) ;
+        });
+
+        diffTotalPct =  ko.computed(() => {
           return round(this.total() /  this.initTotal()*100, 2) ;
         });
+
+        buys = ko.observable(0);
+        sells = ko.observable(0);
 
         history = ko.observableArray([]);
 
         interFunc = null;
         toPrice = ko.observable(0);
+        sellTimes = ko.observable(0);
+        buyTimes = ko.observable(0);
+        randomSellPct = ko.observable(0);
+        randomSellTimes = ko.observable(0);
 
         init = () => {
           btc(initBtc());
           amt(initAmt());
           price(initPrice());
-
+          buys(0);
+          sells(0);
+          feesPaid(0);
         }
 
         buy = () => {
-          console.log("Buying");
+        //  console.log("Buying");
           var newPrice = round(price() / diffPricePct(), 8);
           var nAmt = stepAmt() / diffAmtPct();
-          var ntotal =round( nAmt * newPrice,8);
+          var ntotal =round( nAmt * newPrice*bittrexFee,8);
+          var fee = round( nAmt * newPrice*bittrexFee,8) - round( nAmt * newPrice,8);
+          
+          feesPaid(round(feesPaid()*1 + fee*1,8));
           btc(btc()*1 -ntotal);
           amt(amt()*1 +nAmt*1);
           price(newPrice);
+          buys(buys()+1);
         }
 
         sell = () => {
-          console.log("Selling2");
+        //  console.log("Selling2");
           var newPrice =round( price() * diffPricePct(), 8);
           nAmt = stepAmt();
-          console.log("fasfsf");
-          console.log(amt() + "  fasf-  "+nAmt + " afsa -  "+(amt()*1 < nAmt));
+          if (amt() <= 0) return;
+
+          //console.log("fasfsf");
+          //console.log(amt() + "  fasf-  "+nAmt + " afsa -  "+(amt()*1 < nAmt));
           if (amt()*1 < nAmt) {
             nAmt = amt();
           }
-          console.log(nAmt)
-          var ntotal = round(nAmt * newPrice, 8);
+          //console.log(nAmt)
+          var ntotal = round(nAmt * newPrice/bittrexFee, 8);
+          var fee = round( nAmt * newPrice,8)-round( (nAmt * newPrice)/bittrexFee,8);
+          feesPaid(round(feesPaid()*1 + fee*1,8));
           btc(btc()*1 +ntotal);
           amt(amt()*1 -nAmt);
           price(newPrice);
+          sells(sells()+1);
         }
 
         dropToPrice = () => {
@@ -83,7 +108,7 @@
             else {
               stopInterval();
             }
-          },100);
+          },50);
         }
 
         buysellToZero = () => {
@@ -96,7 +121,61 @@
             else {
               stopInterval();
             }
-          },100);
+          },50);
+        }
+
+        sellAll = () => {
+          interFunc = setInterval(() => {
+            if (amt()  > 0) {
+              sell();
+            }
+            else {
+              stopInterval();
+            }
+          },50);
+        }
+
+        sellTimesF = () => {
+          interFunc = setInterval(() => {
+            if (sellTimes()  > 0) {
+              sell();
+              sellTimes(sellTimes()-1);
+            }
+            else {
+              stopInterval();
+            }
+          },50);
+        }
+
+         buyTimesF = () => {
+          interFunc = setInterval(() => {
+            if (buyTimes()  > 0) {
+              buy();
+              buyTimes(buyTimes()-1);
+            }
+            else {
+              stopInterval();
+            }
+          },50);
+        }
+
+        random = () => {
+          interFunc = setInterval(() => {
+
+            if (randomSellTimes()  > 0 && amt() > 0) {
+              var sellr = Math.random()*100;
+              if (sellr > randomSellPct()) {
+                sell();
+              } else  {
+                buy();
+              }
+              
+              randomSellTimes(randomSellTimes()-1);
+            }
+            else {
+              stopInterval();
+            }
+          },50);
         }
 
         stopInterval = () => {
@@ -122,17 +201,37 @@
 <div >Current price : <span data-bind="text: price"> </span></div>
 <div >Current Total : <span data-bind="text: total"> </span></div>
 <div > Total Diff  : <span data-bind="text: diffTotal"> </span></div>
+<div > Total Diff Pct  : <span data-bind="text: diffTotalPct"> </span></div>
+<div > Fees  : <span data-bind="text: feesPaid"> </span></div>
+<div > Buys  : <span data-bind="text: buys"> </span></div>
+<div > Sells  : <span data-bind="text: sells"> </span></div>
 <button  type="button" class="btn btn-primary" onclick="buy()">Buy</button>
 <button  type="button" class="btn btn-primary" onclick="sell()">Sell</button>
 <button  type="button" class="btn btn-primary" onclick="buy();sell();">Buy + Sell</button>
 <button  type="button" class="btn btn-primary" onclick="sell();buy();"> Sell + Buy</button>
 <div>
 <button  type="button" class="btn btn-primary" onclick="dropToPrice()"> drop To Price</button>
-<span>Step amt<input type="text" id="toPrice" data-bind="textInput: toPrice"></input> </span>
+<span>Price<input type="text" id="toPrice" data-bind="textInput: toPrice"></input> </span>
 <button  type="button" class="btn btn-primary" onclick="stopInterval()"> stop</button></div>
 <div>
 <button  type="button" class="btn btn-primary" onclick="buysellToZero()">buy-sell To Zero</button>
-<button  type="button" class="btn btn-primary" onclick="stopInterval()"> stop</button></div>
+</div>
+<div>
+<button  type="button" class="btn btn-primary" onclick="sellAll()">Sell all</button>
+</div>
+<div>
+<button  type="button" class="btn btn-primary" onclick="sellTimesF()"> Sell</button>
+<span>Times<input type="text" id="sellTimes" data-bind="textInput: sellTimes"></input> </span>
+</div>
+<div>
+<button  type="button" class="btn btn-primary" onclick="buyTimesF()"> Buy</button>
+<span>Times<input type="text" id="buyTimes" data-bind="textInput: buyTimes"></input> </span>
+</div>
+<div>
+<button  type="button" class="btn btn-primary" onclick="random()"> Random</button>
+<span>SellPct<input type="text" id="randomSellPct" data-bind="textInput: randomSellPct"></input> </span>
+<span>Times<input type="text" id="randomSellTimes" data-bind="textInput: randomSellTimes"></input> </span>
+</div>
 
   <script >
 
