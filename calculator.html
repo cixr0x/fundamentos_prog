@@ -24,7 +24,7 @@
         initTotal = ko.computed(() => {
           return this.initBtc()*1 + this.initAmt()*this.initPrice();
         });
-
+        
         btc = ko.observable(0);
         amt = ko.observable(0);
         price = ko.observable(0);
@@ -37,6 +37,10 @@
         });
 
         history = ko.observableArray([]);
+
+        interFunc = null;
+        toPrice = ko.observable(0);
+
         init = () => {
           btc(initBtc());
           amt(initAmt());
@@ -69,33 +73,43 @@
           amt(amt()*1 -nAmt);
           price(newPrice);
         }
+
+        dropToPrice = () => {
+          interFunc = setInterval(() => {
+            console.log(price() + "  -  " +  toPrice());
+            if (price()  > toPrice()) {
+              buy();
+            }
+            else {
+              stopInterval();
+            }
+          },100);
+        }
+
+        buysellToZero = () => {
+          interFunc = setInterval(() => {
+            console.log(price() + "  -  " +  toPrice());
+            if (amt()  > 0) {
+              buy();
+              sell();
+            }
+            else {
+              stopInterval();
+            }
+          },100);
+        }
+
+        stopInterval = () => {
+          clearInterval(interFunc);
+        } 
       };
 
-     /* function init() {
-        viewModel.init();
-      }
-
-      function buy() {
-        viewModel.buy();
-      }
-       function sell() {
-        viewModel.sell();
-      }
-
-      function buysell() {
-        viewModel.buy();
-      //  viewModel.sell();
-      }
-       function sellbuy() {
-        viewModel.sell();
-        viewModel.buy();
-      }*/
 
     </script>
 </head>
     <body>
   <div ><span>Initial btc<input type="text" id="btc" data-bind="textInput: initBtc"></input> </span></div>
-    <div ><span>COIN amt<input type="text" id="amt" data-bind="textInput: initAmt"></input> </span></div>
+    <div ><span>COIN amt<input type="text" id="amt" data-bind="textInput: initAmt">2000</input> </span></div>
 <div ><span>COIN price<input type="text" id="price" data-bind="textInput: initPrice"></input> </span></div>
 <div ><span>Step amt<input type="text" id="stepAmt" data-bind="textInput: stepAmt"></input> </span></div>
 <div ><span>Diff Price Pct <input type="text" id="diffPricePct" data-bind="textInput: diffPricePct"></input> </span></div>
@@ -112,6 +126,14 @@
 <button  type="button" class="btn btn-primary" onclick="sell()">Sell</button>
 <button  type="button" class="btn btn-primary" onclick="buy();sell();">Buy + Sell</button>
 <button  type="button" class="btn btn-primary" onclick="sell();buy();"> Sell + Buy</button>
+<div>
+<button  type="button" class="btn btn-primary" onclick="dropToPrice()"> drop To Price</button>
+<span>Step amt<input type="text" id="toPrice" data-bind="textInput: toPrice"></input> </span>
+<button  type="button" class="btn btn-primary" onclick="stopInterval()"> stop</button></div>
+<div>
+<button  type="button" class="btn btn-primary" onclick="buysellToZero()">buy-sell To Zero</button>
+<button  type="button" class="btn btn-primary" onclick="stopInterval()"> stop</button></div>
+
   <script >
 
 
